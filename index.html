@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bara Cee | Campus community & marketplace</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- LANDING (shown when logged out). Put your photo at public/assets/hero.jpg -->
+<section id="landing">
+  <header class="l-top">
+    <div class="logo">BARA <b>CEE</b></div>
+    <div class="l-btns"><button class="btn ghost" data-auth="login"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+    <button class="btn" data-auth="signup"><i class="fa-solid fa-user-plus"></i> Sign up</button></div>
+  </header>
+  <div class="hero">
+    <h1 class="rise">Your campus.<br><span>Your people. Your market.</span></h1>
+    <p class="rise d1">Bara Cee connects students, local businesses and the community around campus. Share stories, chat, and buy or sell safely.</p>
+    <div class="rise d2"><button class="btn big" data-auth="signup">Join Bara Cee</button></div>
+  </div>
+  <div class="feats">
+    <div class="f rise d1"><i class="fa-solid fa-shield-halved"></i><h3>Verified businesses</h3><p>Real owners are checked in person, so comrades avoid scammers.</p></div>
+    <div class="f rise d2"><i class="fa-solid fa-store"></i><h3>Campus marketplace</h3><p>Buy and sell items and services close to you.</p></div>
+    <div class="f rise d3"><i class="fa-solid fa-circle-play"></i><h3>Stories and chats</h3><p>Share your day, reply to stories, message anyone.</p></div>
+  </div>
+  <footer class="l-foot">&copy; Bara Cee &middot; by Malocox Tech</footer>
+</section>
+
+<!-- AUTH MODAL -->
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+
+<!-- APP -->
+<div id="app" hidden>
+  <header class="top">
+    <div class="logo">BARA <b>CEE</b></div>
+    <div class="top-r">
+      <button class="ico" id="searchBtn" data-tip="Search" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button class="ico" id="themeBtn" data-tip="Theme" aria-label="Theme"><i class="fa-solid fa-moon"></i></button>
+      <button class="ico" id="logoutBtn" data-tip="Log out" aria-label="Log out"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="nav" id="nav"></nav>
+    <main id="main"></main>
+    <aside class="side">
+      <h3><i class="fa-solid fa-fire"></i> Trending</h3><div id="trend"></div>
+      <h3><i class="fa-solid fa-circle"></i> Online now</h3><div id="online"></div>
+    </aside>
+  </div>
+  <button class="bot-fab" id="botBtn" aria-label="AI helper"><i class="fa-solid fa-robot"></i></button>
+</div>
+<div class="toast" id="toast"></div>
+<script src="./app.js"></script>
+</body>
+</html>
