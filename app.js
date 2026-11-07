@@ -893,10 +893,15 @@ async function loadFeed() {
 
         <div class="acts">
 
-          <button class="lk" data-tip="Like">
-            <i class="fa-regular fa-heart"></i>
-            ${p.likes}
-          </button>
+          <button
+  class="lk ${p.likedByMe ? 'liked' : ''}"
+  data-tip="${p.likedByMe ? 'Unlike' : 'Like'}"
+  aria-label="${p.likedByMe ? 'Unlike' : 'Like'}"
+  aria-pressed="${p.likedByMe ? 'true' : 'false'}"
+>
+  <i class="fa-${p.likedByMe ? 'solid' : 'regular'} fa-heart"></i>
+  <span>${p.likes}</span>
+</button>
 
           <button class="cmb" data-tip="Comments">
             <i class="fa-regular fa-comment"></i>
@@ -976,27 +981,41 @@ async function loadFeed() {
     document.querySelectorAll('#feed .card').forEach(c => {
       const id = c.dataset.id;
 
-      c.querySelector('.lk').onclick = async e => {
-        try {
-          const d = await api(`/posts/${id}/like`, {
-            method: 'POST'
-          });
+     c.querySelector('.lk').onclick = async e => {
+  const button = e.currentTarget;
 
-          e.currentTarget.classList.toggle('liked');
+  if (button.disabled) return;
 
-          e.currentTarget.innerHTML = `
-            <i class="fa-${
-              e.currentTarget.classList.contains('liked')
-                ? 'solid'
-                : 'regular'
-            } fa-heart"></i>
-            ${d.likes}
-          `;
+  button.disabled = true;
 
-        } catch (err) {
-          toast(err.message);
-        }
-      };
+  try {
+    const d = await api(`/posts/${id}/like`, {
+      method: 'POST'
+    });
+
+    button.classList.toggle('liked', d.likedByMe);
+
+    button.dataset.tip = d.likedByMe ? 'Unlike' : 'Like';
+    button.setAttribute(
+      'aria-label',
+      d.likedByMe ? 'Unlike' : 'Like'
+    );
+    button.setAttribute(
+      'aria-pressed',
+      d.likedByMe ? 'true' : 'false'
+    );
+
+    button.innerHTML = `
+      <i class="fa-${d.likedByMe ? 'solid' : 'regular'} fa-heart"></i>
+      <span>${d.likes}</span>
+    `;
+
+  } catch (err) {
+    toast(err.message);
+  } finally {
+    button.disabled = false;
+  }
+};
 
 
       c.querySelector('.cmb').onclick = () => {

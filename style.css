@@ -103,3 +103,21 @@ h2{font-size:20px;margin-bottom:12px}
  .chat{grid-template-columns:1fr}.threads{flex-direction:row;overflow-x:auto}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .hero{padding-top:5vh}
 }
+
+/* Bara Cee like button */
+.acts button.lk {
+  transition: color .2s ease, background .2s ease, transform .15s ease;
+}
+
+.acts button.lk.liked {
+  color: var(--bad);
+}
+
+.acts button.lk:active {
+  transform: scale(.94);
+}
+
+.acts button.lk:disabled {
+  opacity: .65;
+  cursor: wait;
+}
