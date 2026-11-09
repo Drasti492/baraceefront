@@ -358,3 +358,75 @@ h2{font-size:16px;margin-bottom:10px;font-weight:600}
   .m-row:hover .m-del,.m-row .m-del{opacity:1;pointer-events:auto}
   .top-r .ico#themeBtn{display:none} /* theme still in settings on small screens optional; keep if you prefer */
 }
+
+
+/* ==========================================
+   BARA CEE NOTIFICATIONS
+========================================== */
+
+.notification-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0 20px;
+}
+
+.notification-actions button,
+.notification-controls button {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 13px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+
+.notification-actions button {
+  background: #e8f5ed;
+  color: #176b42;
+}
+
+.notification-card {
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.notification-card.unread {
+  border-left: 4px solid #35a66a;
+  background: var(--notification-unread, #f0faf3);
+}
+
+.notification-card p {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.notification-card small {
+  opacity: .65;
+  font-size: 12px;
+}
+
+.notification-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.notification-controls button:first-child {
+  background: #e8f5ed;
+  color: #176b42;
+}
+
+.notification-controls button:last-child {
+  background: #fceaea;
+  color: #a83232;
+}
+
+.notification-empty,
+.notification-loading {
+  padding: 30px 15px;
+  text-align: center;
+  opacity: .7;
+}

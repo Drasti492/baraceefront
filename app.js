@@ -682,6 +682,176 @@ function go(v) {
 
 
 
+
+// ==========================================
+// BARA CEE NOTIFICATIONS
+// ==========================================
+
+let notificationRefreshTimer = null;
+
+async function updateNotifBadge() {
+  if (!tok()) return;
+
+  try {
+    const data = await api("/notifications/unread-count");
+    const badge = document.getElementById("notifBadge");
+
+    if (!badge) return;
+
+    const count = Number(data.count) || 0;
+
+    badge.textContent = count > 99 ? "99+" : String(count);
+    badge.hidden = count === 0;
+  } catch (error) {
+    console.error("Notification badge error:", error);
+  }
+}
+
+async function rNotifs() {
+  const main = document.getElementById("main");
+  if (!main) return;
+
+  main.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Notifications";
+  heading.className = "section-title";
+
+  const actions = document.createElement("div");
+  actions.className = "notification-actions";
+
+  const markAll = document.createElement("button");
+  markAll.type = "button";
+  markAll.textContent = "Mark all as read";
+  markAll.className = "btn-secondary";
+
+  markAll.addEventListener("click", async () => {
+    try {
+      await api("/notifications/read-all", {
+        method: "PATCH"
+      });
+
+      await rNotifs();
+      await updateNotifBadge();
+
+      if (typeof toast === "function") {
+        toast("All notifications marked as read.");
+      }
+    } catch (error) {
+      console.error(error);
+      if (typeof toast === "function") {
+        toast("Could not update notifications.");
+      }
+    }
+  });
+
+  actions.appendChild(markAll);
+  main.append(heading, actions);
+
+  const loading = document.createElement("p");
+  loading.textContent = "Loading notifications...";
+  loading.className = "notification-loading";
+  main.appendChild(loading);
+
+  try {
+    const data = await api("/notifications");
+    const notifications = data.notifications || [];
+
+    loading.remove();
+
+    if (!notifications.length) {
+      const empty = document.createElement("div");
+      empty.className = "notification-empty";
+      empty.textContent = "You're all caught up! No notifications yet.";
+      main.appendChild(empty);
+      return;
+    }
+
+    notifications.forEach(notification => {
+      const card = document.createElement("article");
+      card.className = notification.readAt
+        ? "notification-card"
+        : "notification-card unread";
+
+      const actor = document.createElement("strong");
+      actor.textContent = notification.actor
+        ? "@" + notification.actor.username
+        : "Bara Cee";
+
+      const body = document.createElement("p");
+      body.textContent = notification.body;
+
+      const date = document.createElement("small");
+      date.textContent = new Date(
+        notification.createdAt
+      ).toLocaleString();
+
+      const controls = document.createElement("div");
+      controls.className = "notification-controls";
+
+      if (!notification.readAt) {
+        const readButton = document.createElement("button");
+        readButton.type = "button";
+        readButton.textContent = "Mark as read";
+
+        readButton.addEventListener("click", async () => {
+          try {
+            await api(
+              "/notifications/" +
+              encodeURIComponent(notification.id) +
+              "/read",
+              { method: "PATCH" }
+            );
+
+            await rNotifs();
+            await updateNotifBadge();
+          } catch (error) {
+            console.error(error);
+            toast("Could not mark notification as read.");
+          }
+        });
+
+        controls.appendChild(readButton);
+      }
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+
+      deleteButton.addEventListener("click", async () => {
+        try {
+          await api(
+            "/notifications/" +
+            encodeURIComponent(notification.id),
+            { method: "DELETE" }
+          );
+
+          await rNotifs();
+          await updateNotifBadge();
+        } catch (error) {
+          console.error(error);
+          toast("Could not delete notification.");
+        }
+      });
+
+      controls.appendChild(deleteButton);
+
+      card.append(actor, body, date, controls);
+      main.appendChild(card);
+    });
+
+    await updateNotifBadge();
+
+  } catch (error) {
+    console.error("Notifications loading error:", error);
+
+    loading.textContent =
+      "Unable to load notifications. Please try again.";
+  }
+}
+
+
+
 /* ---------- SIDEBAR ---------- */
 
 async function side() {
@@ -1930,6 +2100,33 @@ $('#bs').onclick = ask;
 $('#bi').onkeydown = e => {
   if (e.key === 'Enter') ask();
 };
+
+
+
+// Open notifications when the bell is clicked.
+const notifButton = document.getElementById("notifBtn");
+
+if (notifButton && !notifButton.dataset.notificationsBound) {
+  notifButton.dataset.notificationsBound = "true";
+
+  notifButton.addEventListener("click", () => {
+    go("notifs");
+  });
+}
+
+// Refresh unread count every 30 seconds.
+if (!notificationRefreshTimer) {
+  updateNotifBadge();
+
+  notificationRefreshTimer = setInterval(() => {
+    updateNotifBadge();
+
+    if (view === "notifs") {
+      rNotifs();
+    }
+  }, 30000);
+}
+
 
 
 /* ---------- INITIALIZE APP ---------- */
