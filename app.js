@@ -589,9 +589,10 @@ $('#logoutBtn').onclick = logout;
 
 const NAV = [
   ['home', 'fa-house', 'Home'],
-  ['market', 'fa-shop', 'Marketplace'],
+  ['market', 'fa-shop', 'Market'],
   ['inbox', 'fa-message', 'Inbox'],
-  ['profile', 'fa-user', 'Profile']
+  ['notifs', 'fa-bell', 'Alerts'],
+  ['profile', 'fa-user', 'You']
 ];
 
 async function start() {
@@ -636,18 +637,17 @@ async function start() {
 
 function go(v) {
   view = v;
-
   document.querySelectorAll('#nav button').forEach(b => {
     b.classList.toggle('on', b.dataset.k === v);
   });
-
   ({
     home: rHome,
     market: rMarket,
     inbox: rInbox,
-    profile: rProfile
-  })[v]();
-
+    notifs: rNotifs,
+    profile: rProfile,
+    settings: rSettings
+  })[v]?.();
   $('#main').scrollTop = 0;
 }
 
@@ -893,12 +893,9 @@ async function loadFeed() {
 
         <div class="acts">
 
-          <button
-  class="lk ${p.likedByMe ? 'liked' : ''}"
-  data-tip="${p.likedByMe ? 'Unlike' : 'Like'}"
-  aria-label="${p.likedByMe ? 'Unlike' : 'Like'}"
-  aria-pressed="${p.likedByMe ? 'true' : 'false'}"
->
+          <button class="lk ${p.likedByMe ? 'liked' : ''}"
+  aria-label="${p.likedByMe ? 'Remove reaction' : 'React'}"
+  aria-pressed="${p.likedByMe ? 'true' : 'false'}">
   <i class="fa-${p.likedByMe ? 'solid' : 'regular'} fa-heart"></i>
   <span>${p.likes}</span>
 </button>

@@ -4,18 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bara Cee | Campus community & marketplace</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-<!-- LANDING (shown when logged out). Put your photo at public/assets/hero.jpg -->
 <section id="landing">
   <header class="l-top">
     <div class="logo">BARA <b>CEE</b></div>
-    <div class="l-btns"><button class="btn ghost" data-auth="login"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
-    <button class="btn" data-auth="signup"><i class="fa-solid fa-user-plus"></i> Sign up</button></div>
+    <div class="l-btns">
+      <button class="btn ghost" data-auth="login"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+      <button class="btn" data-auth="signup"><i class="fa-solid fa-user-plus"></i> Sign up</button>
+    </div>
   </header>
   <div class="hero">
     <h1 class="rise">Your campus.<br><span>Your people. Your market.</span></h1>
@@ -27,18 +30,29 @@
     <div class="f rise d2"><i class="fa-solid fa-store"></i><h3>Campus marketplace</h3><p>Buy and sell items and services close to you.</p></div>
     <div class="f rise d3"><i class="fa-solid fa-circle-play"></i><h3>Stories and chats</h3><p>Share your day, reply to stories, message anyone.</p></div>
   </div>
-  <footer class="l-foot">&copy; Bara Cee &middot; by Malocox Tech</footer>
+  <footer class="l-foot">
+    <div class="l-foot-inner">
+      <span>&copy; Bara Cee · by Malocox Tech</span>
+      <div class="l-foot-links">
+        <a href="mailto:support@baracee.com">Contact support</a>
+        <button type="button" id="landingSupport">Help</button>
+      </div>
+    </div>
+  </footer>
 </section>
 
-<!-- AUTH MODAL -->
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 
-<!-- APP -->
 <div id="app" hidden>
   <header class="top">
     <div class="logo">BARA <b>CEE</b></div>
     <div class="top-r">
       <button class="ico" id="searchBtn" data-tip="Search" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button class="ico" id="notifBtn" data-tip="Alerts" aria-label="Notifications">
+        <i class="fa-regular fa-bell"></i>
+        <span class="badge" id="notifBadge" hidden>0</span>
+      </button>
+      <button class="ico" id="settingsBtn" data-tip="Settings" aria-label="Settings"><i class="fa-solid fa-gear"></i></button>
       <button class="ico" id="themeBtn" data-tip="Theme" aria-label="Theme"><i class="fa-solid fa-moon"></i></button>
       <button class="ico" id="logoutBtn" data-tip="Log out" aria-label="Log out"><i class="fa-solid fa-right-from-bracket"></i></button>
     </div>
@@ -55,11 +69,9 @@
 </div>
 <div class="toast" id="toast"></div>
 
-  <script>
-    window.BARA_CEE_API_URL = "https://baraceeback.onrender.com";
-  </script>
-
-  <script src="./app.js"></script>
-
+<script>
+  window.BARA_CEE_API_URL = "https://baraceeback.onrender.com";
+</script>
+<script src="./app.js"></script>
 </body>
 </html>
