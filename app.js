@@ -635,21 +635,51 @@ async function start() {
 }
 
 
+
 function go(v) {
   view = v;
+
   document.querySelectorAll('#nav button').forEach(b => {
     b.classList.toggle('on', b.dataset.k === v);
   });
-  ({
-    home: rHome,
-    market: rMarket,
-    inbox: rInbox,
-    notifs: rNotifs,
-    profile: rProfile,
-    settings: rSettings
-  })[v]?.();
+
+  switch (v) {
+    case 'home':
+      rHome();
+      break;
+
+    case 'market':
+      rMarket();
+      break;
+
+    case 'inbox':
+      rInbox();
+      break;
+
+    case 'profile':
+      rProfile();
+      break;
+
+    case 'notifs':
+      if (typeof rNotifs === 'function') {
+        rNotifs();
+      } else {
+        toast('Notifications are being connected.');
+      }
+      break;
+
+    case 'settings':
+      if (typeof rSettings === 'function') {
+        rSettings();
+      } else {
+        toast('Settings are being connected.');
+      }
+      break;
+  }
+
   $('#main').scrollTop = 0;
 }
+
 
 
 /* ---------- SIDEBAR ---------- */
