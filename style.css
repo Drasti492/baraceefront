@@ -63,7 +63,7 @@ img,video{max-width:100%}
 /* landing */
 #landing{
   min-height:100dvh;display:flex;flex-direction:column;color:#fff;
-  background:linear-gradient(rgba(8,22,18,.78),rgba(8,22,18,.9)),url(assets/hero.jpg) center/cover no-repeat fixed #0a1612;
+  background:linear-gradient(rgba(8,22,18,.78),rgba(8,22,18,.9)),url(./assests/hero.jpg) center/cover no-repeat fixed #0a1612;
 }
 #landing .logo{color:#fff}
 .l-top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 5vw 12px;gap:10px}
