@@ -136,7 +136,7 @@ const name = (u = {}) => {
     <span class="nm">
       <i class="fa-solid ${ico} t-${esc(u.type || 'member')}"
         title="${label}"></i>
-      ${esc(u.bizName && u.type === 'business' ? u.bizName : (u.username || 'Member'))}
+      ${esc(u.bizName && u.type === 'business' ? u.bizName : (u.displayName || u.username || 'Member'))}
       ${
         u.verified
           ? '<i class="fa-solid fa-circle-check vf" title="Verified business"></i>'

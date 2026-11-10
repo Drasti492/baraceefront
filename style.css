@@ -430,3 +430,31 @@ h2{font-size:16px;margin-bottom:10px;font-weight:600}
   text-align: center;
   opacity: .7;
 }
+
+
+/* APPEND to the end of style.css */
+input[type=checkbox]{width:auto;accent-color:var(--brand);transform:scale(1.2)}
+.th-txt{display:flex;flex-direction:column;min-width:0;text-align:left}
+.th-txt small{color:var(--mute);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.th .nav-badge{margin-left:auto;background:var(--brand);color:#fff;font-size:10px;min-width:16px;height:16px;border-radius:99px;display:grid;place-items:center;padding:0 4px}
+.m.gone{font-style:italic;opacity:.65}
+.m-quote{border-left:3px solid var(--brand);background:#0000000f;border-radius:6px;padding:4px 8px;margin-bottom:6px;font-size:12px;cursor:pointer;opacity:.9}
+.m-quote b{display:block;font-size:11px}
+.m-row.me .m-quote{border-left-color:#fff;background:#ffffff26}
+.m-story{display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:4px;border-radius:8px;background:#0000000f;cursor:pointer;font-size:12px}
+.m-story img,.m-story .ph{width:44px;height:58px;border-radius:6px;object-fit:cover;background:#0d1210;color:#fff;display:grid;place-items:center}
+.m-story.gone{opacity:.6;cursor:default}
+.m-row.me .m-story{background:#ffffff26}
+.m-row.flash .m,.card.flash{animation:flash 1.5s ease}
+@keyframes flash{0%,60%{box-shadow:0 0 0 3px var(--brand)}100%{box-shadow:0 0 0 0 transparent}}
+.reply-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--line);background:var(--p2);font-size:12px}
+.reply-bar>div{flex:1;border-left:3px solid var(--brand);padding-left:8px;min-width:0}
+.reply-bar b{display:block}
+.reply-bar span{display:block;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctx-menu{position:fixed;z-index:80;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;min-width:150px;box-shadow:0 8px 28px #0004}
+.ctx-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:8px;font-size:13px;text-align:left}
+.ctx-menu button:hover{background:var(--p2)}
+.ctx-menu .danger{color:var(--bad)}
+.notif-item .nd{margin-left:auto;width:28px;height:28px;flex-shrink:0}
+.m-row{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.m{-webkit-user-select:text;user-select:text}
