@@ -117,7 +117,7 @@ const avatar = (u = {}, c = '') => {
   const username = String(u.username || '?');
 
   return `
-    <span class="avw ${c}">
+    <span class="avw ${c}" data-uid="${esc(u.id || '')}">
       ${
         u.avatar
           ? `<img class="av" src="${esc(assetUrl(u.avatar))}" alt="">`
@@ -133,7 +133,7 @@ const name = (u = {}) => {
   const [ico, label] = TI[u.type] || ['fa-user', 'Member'];
 
   return `
-    <span class="nm">
+    <span class="nm" data-uid="${esc(u.id || '')}">
       <i class="fa-solid ${ico} t-${esc(u.type || 'member')}"
         title="${label}"></i>
       ${esc(u.bizName && u.type === 'business' ? u.bizName : (u.displayName || u.username || 'Member'))}
