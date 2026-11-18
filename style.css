@@ -750,3 +750,92 @@ input[type=range]{padding:0;border:0;background:none;accent-color:var(--brand)}
 .plr{padding:9px 0;border-bottom:1px solid var(--line);flex-wrap:nowrap}
 .plr:last-child{border-bottom:0}
 #pl{max-height:55dvh;overflow-y:auto}
+
+/* APPEND to the very end of style.css (after bc.css). Replaces the old inbox look. */
+
+/* the page wrapper was capped at 600px — that is what squeezed the chat */
+main>.v.inbox-v{max-width:none;margin:0;padding:0}
+
+.inbox{display:grid;grid-template-columns:minmax(280px,350px) minmax(0,1fr);height:calc(100dvh - 92px);background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ib-list{display:flex;flex-direction:column;min-height:0;min-width:0;border-right:1px solid var(--line)}
+.ib-h{padding:12px 14px 4px}
+.ib-h h2{margin:0;font-size:18px}
+.ib-search{display:flex;align-items:center;gap:8px;margin:8px 12px;padding:0 12px;background:var(--p2);border-radius:99px;color:var(--mute);font-size:13px}
+.ib-search input{border:0;background:none;box-shadow:none;padding:9px 0;border-radius:0}
+.ib-rows{flex:1;overflow-y:auto;overscroll-behavior:contain}
+
+.ib-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.ib-row:hover{background:var(--p2)}
+.ib-row.on{background:var(--brand-soft)}
+.ib-av{flex:0 0 auto}
+.ib-av .av{width:48px;height:48px;font-size:18px}
+.ib-av .dot{width:13px;height:13px;right:0;bottom:0}
+.ib-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ib-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ib-name{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib-top time{flex:0 0 auto;font-size:11px;color:var(--mute)}
+.ib-top time.new{color:var(--ok);font-weight:700}
+.ib-bot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ib-last{font-size:13px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib-last i{font-size:10px;margin-right:2px}
+.ib-badge{flex:0 0 auto;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--ok);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.st{font-size:11px;color:var(--mute);line-height:1.2}
+.st.on{color:var(--ok);font-weight:700}
+
+.ib-chat{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg)}
+.ib-chat .chat-head{background:var(--panel);padding:8px 12px;gap:10px}
+.ib-chat .msgs{flex:1;min-height:0;padding:12px 14px}
+.ib-back{display:none;width:34px;height:34px;flex:0 0 34px}
+.ib-empty{margin:auto;text-align:center;color:var(--mute)}
+.ib-empty i{font-size:44px;margin-bottom:10px;opacity:.5}
+
+.m-day{display:flex;justify-content:center;margin:8px 0 4px}
+.m-day span{background:var(--panel);border:1px solid var(--line);color:var(--mute);font-size:11px;padding:3px 11px;border-radius:99px}
+.m-time{display:flex;align-items:center;gap:4px}
+.m-row.me .m-time{justify-content:flex-end}
+.m-time i.rd{color:#34a8e8}
+.m-time i{font-size:10px}
+.m-row{max-width:80%}
+
+/* view once */
+.vo-clk{position:relative;width:46px;height:46px}
+.vo-clk svg{width:100%;height:100%;transform:rotate(-90deg)}
+.vo-clk circle{fill:none;stroke-width:3}
+.vo-clk .bg{stroke:#ffffff33}
+.vo-clk .fg{stroke:#2dd48a;stroke-linecap:round;stroke-dasharray:100.5;stroke-dashoffset:0}
+@keyframes voRun{to{stroke-dashoffset:100.5}}
+.vo-clk span{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff}
+.vo-wm{background-repeat:repeat}
+@media print{.vo-view{display:none!important}body{display:none!important}}
+
+/* phones: WhatsApp style — list first, tap a chat to open it full screen */
+@media(max-width:700px){
+  .inbox{display:block;height:calc(100dvh - 148px);border-radius:12px}
+  .ib-list{border-right:0;height:100%}
+  .ib-chat{display:none;height:100%}
+  .inbox.has-chat .ib-list{display:none}
+  .inbox.has-chat .ib-chat{display:flex}
+  .ib-back{display:grid}
+  .ib-row{padding:10px 12px}
+  body:has(.inbox.has-chat) .nav,
+  body:has(.inbox.has-chat) .bot-fab{display:none}
+  body:has(.inbox.has-chat) main{padding:0}
+  body:has(.inbox.has-chat) .inbox{height:calc(100dvh - 54px);border-radius:0;border-width:0}
+  .m-row{max-width:86%}
+}
+
+/* small-screen hardening: nothing overflows, long names/status truncate */
+.ib-row,.ib-mid,.ib-top,.ib-bot{min-width:0}
+.st{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-who{flex:1;min-width:0}
+.ch-t{min-width:0}
+.ch-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch-s{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-compose input{min-width:0}
+.chat-compose .btn{flex:0 0 40px;width:40px;height:40px;padding:0;border-radius:50%}
+@media(max-width:700px){
+  body:has(.inbox.has-chat) .chat-compose{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+  .ib-av .av{width:44px;height:44px}
+  .ib-name{font-size:14px}
+  .ib-last{font-size:12.5px}
+}
