@@ -750,7 +750,6 @@ input[type=range]{padding:0;border:0;background:none;accent-color:var(--brand)}
 .plr{padding:9px 0;border-bottom:1px solid var(--line);flex-wrap:nowrap}
 .plr:last-child{border-bottom:0}
 #pl{max-height:55dvh;overflow-y:auto}
-
 /* APPEND to the very end of style.css (after bc.css). Replaces the old inbox look. */
 
 /* the page wrapper was capped at 600px — that is what squeezed the chat */
