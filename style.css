@@ -743,3 +743,10 @@ input[type=range]{padding:0;border:0;background:none;accent-color:var(--brand)}
   .car-slide,.car-slide img,.car-slide video{max-height:380px}
 }
 @media(max-width:380px){.info{grid-template-columns:1fr}}
+
+
+.stat-b{cursor:pointer;border-radius:10px}
+.stat-b:hover{background:var(--p2)}
+.plr{padding:9px 0;border-bottom:1px solid var(--line);flex-wrap:nowrap}
+.plr:last-child{border-bottom:0}
+#pl{max-height:55dvh;overflow-y:auto}

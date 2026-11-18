@@ -1,7 +1,7 @@
 /* bc-people.js — profiles, disciples, ratings, block, edit profile, settings, privacy, support. */
 (() => {
   // Create a free form at formspree.io and paste its URL here (looks like https://formspree.io/f/abcdwxyz)
-  const FORMSPREE_URL = 'https://formspree.io/f/mljbrnpn';
+  const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID';
   const YEARS = ['1st year', '2nd year', '3rd year', '4th year', 'Super senior', 'Alumni'];
   const dispName = u => u.bizName && u.type === 'business' ? u.bizName : (u.displayName || u.username);
 
@@ -36,6 +36,7 @@
     add('fa-calendar', 'Joined', new Date(u.joinedAt).toLocaleDateString([], { month: 'short', year: 'numeric' }));
     const status = u.online ? '<span class="pill ok"><i class="fa-solid fa-circle" style="font-size:7px"></i> Online</span>'
       : u.lastSeen ? `<span class="pill">${BC.lastSeen(u.lastSeen)}</span>` : '';
+    const dBtn = d.iDisciple ? ['fa-check', 'Disciple', 'ghost'] : d.requested ? ['fa-clock', 'Requested', 'ghost'] : ['fa-user-plus', 'Be a disciple', ''];
 
     $('#main').innerHTML = `
       <div class="v">
@@ -47,21 +48,21 @@
             <div class="prof-id">
               <h2>${esc(dispName(u))}${u.verified ? ' <i class="fa-solid fa-circle-check vf" title="Verified"></i>' : ''}</h2>
               <div class="prof-un">@${esc(u.username)}</div>
-              <div class="pill-row"><span class="pill"><i class="fa-solid ${ico}"></i> ${label}</span>${status}${isMe && d.user.lockPosts ? '<span class="pill"><i class="fa-solid fa-lock"></i> Posts locked</span>' : ''}</div>
+              <div class="pill-row"><span class="pill"><i class="fa-solid ${ico}"></i> ${label}</span>${status}${isMe && d.user.lockPosts ? '<span class="pill"><i class="fa-solid fa-lock"></i> Private account</span>' : ''}</div>
             </div>
           </div>
           <div class="prof-stats">
-            <div><b>${st.disciples}</b><span>Disciples</span></div>
-            <div><b>${st.discipling}</b><span>Discipling</span></div>
+            <div ${isMe ? 'class="stat-b" id="stD" role="button" tabindex="0"' : ''}><b>${st.disciples}</b><span>Disciples</span></div>
+            <div ${isMe ? 'class="stat-b" id="stG" role="button" tabindex="0"' : ''}><b>${st.discipling}</b><span>Discipling</span></div>
             <div><b>${st.posts}</b><span>Posts</span></div>
             <div><b>${st.rating.n ? st.rating.avg : '–'}<i class="fa-solid fa-star" style="color:var(--warn);font-size:11px;margin-left:3px"></i></b><span>${st.rating.n} rating${st.rating.n === 1 ? '' : 's'}</span></div>
           </div>
           ${u.bio ? `<p class="prof-bio">${esc(u.bio)}</p>` : isMe ? '<p class="prof-bio mute">Add a short bio so people know who you are.</p>' : ''}
           ${items.length ? `<ul class="info">${items.join('')}</ul>` : ''}
           <div class="prof-actions">
-            ${isMe ? `<button class="btn sm" id="epb"><i class="fa-solid fa-pen"></i> Edit profile</button><button class="btn ghost sm" id="stb"><i class="fa-solid fa-gear"></i> Settings</button>`
-              : `<button class="btn sm ${d.iDisciple ? 'ghost' : ''}" id="dsc" ${d.iBlocked || d.blockedMe ? 'disabled' : ''}><i class="fa-solid ${d.iDisciple ? 'fa-check' : 'fa-user-plus'}"></i> ${d.iDisciple ? 'Disciple' : 'Be a disciple'}</button>
-                 <button class="btn ghost sm" id="pmsg"><i class="fa-regular fa-paper-plane"></i> Message</button>
+            ${isMe ? `<button class="btn sm" id="epb"><i class="fa-solid fa-pen"></i> Edit profile</button><button class="btn ghost sm" id="stb"><i class="fa-solid fa-gear"></i> Settings</button>${d.requestsCount ? `<button class="btn ghost sm" id="reqb"><i class="fa-solid fa-user-clock"></i> Requests <span class="ib-badge" style="display:inline-grid">${d.requestsCount}</span></button>` : ''}`
+              : `<button class="btn sm ${dBtn[2]}" id="dsc" ${d.iBlocked || d.blockedMe ? 'disabled' : ''}><i class="fa-solid ${dBtn[0]}"></i> ${dBtn[1]}</button>
+                 <button class="btn ghost sm" id="pmsg" ${d.blockedMe ? 'disabled' : ''}><i class="fa-regular fa-paper-plane"></i> Message</button>
                  <button class="btn ghost sm icon" id="pmore" aria-label="More"><i class="fa-solid fa-ellipsis"></i></button>`}
           </div>
           ${!isMe && !d.iBlocked && !d.blockedMe ? `<div class="rate-row"><span>Rate ${esc(u.username)}</span><span class="stars" id="stars">${stars(0, st.rating.mine)}</span></div>` : ''}
@@ -75,6 +76,9 @@
     if (isMe) {
       $('#epb').onclick = () => editProfile(u);
       $('#stb').onclick = () => go('settings');
+      $('#stD').onclick = () => peopleModal('followers');
+      $('#stG').onclick = () => peopleModal('following');
+      if ($('#reqb')) $('#reqb').onclick = requestsModal;
       $('#avf').onchange = async e => {
         const f = e.target.files[0]; if (!f) return;
         if (f.size > 10 * 1048576) return toast('Photo too large (10MB max)');
@@ -85,6 +89,10 @@
     } else {
       $('#pmsg').onclick = () => { chatWith = { id: u.id, username: u.username, type: u.type, avatar: u.avatar }; go('inbox'); };
       $('#dsc').onclick = async () => {
+        if (d.iDisciple || d.requested) {
+          const ok = await BC.confirm({ title: d.requested ? 'Cancel request?' : `Stop discipling @${u.username}?`, message: d.requested ? 'Your request will be withdrawn.' : (d.isPrivate ? 'You will stop seeing their posts and stories until they approve you again.' : 'You will no longer follow them.'), confirm: d.requested ? 'Cancel request' : 'Unfollow', icon: 'fa-user-minus' });
+          if (!ok) return;
+        }
         try { await api(`/users/${u.id}/disciple`, { method: 'POST' }); BC.showUser(u.id); } catch (e) { toast(e.message); }
       };
       $('#pmore').onclick = e => {
@@ -113,11 +121,41 @@
       try {
         const r = await api(`/users/${u.id}/posts`);
         const box = $('#uposts'); if (!box) return;
-        if (r.locked) box.innerHTML = '<div class="card empty"><i class="fa-solid fa-lock"></i><p>This account’s posts are locked.</p></div>';
+        if (r.locked) box.innerHTML = r.reason === 'blocked'
+          ? '<div class="card empty"><i class="fa-solid fa-ban"></i><p>You can’t see this account’s posts.</p></div>'
+          : `<div class="card empty"><i class="fa-solid fa-lock"></i><p><b>This account is private</b></p><p>${d.requested ? 'Your request is waiting for approval.' : 'Become a disciple to see their posts and stories.'}</p></div>`;
         else BC.renderPosts(box, r.posts, '<div class="card empty"><i class="fa-regular fa-image"></i><p>No posts yet.</p></div>');
       } catch (e) { $('#uposts').innerHTML = `<p class="mute">${esc(e.message)}</p>`; }
     };
     BC.reloadPosts = reload; reload();
+  }
+  async function peopleModal(kind) {
+    const mineF = kind === 'followers';
+    modal(`<h2>${mineF ? 'Your disciples' : 'Discipling'}</h2><div id="pl"><p class="mute">Loading…</p></div><button class="btn ghost" style="width:100%;margin-top:12px" onclick="closeModal()">Close</button>`);
+    try {
+      const l = await api('/disciples?kind=' + kind);
+      $('#pl').innerHTML = l.map(u => `<div class="row plr">${avatar(u, 'sm')}${name(u)}<button class="btn ghost sm sp rm" data-id="${u.id}">${mineF ? 'Remove' : 'Unfollow'}</button></div>`).join('') || '<p class="mute">Nobody here yet.</p>';
+      document.querySelectorAll('#pl .rm').forEach(b => b.onclick = async () => {
+        const u = l.find(x => x.id === b.dataset.id);
+        const ok = await BC.confirm(mineF
+          ? { title: `Remove @${u.username}?`, message: 'They will no longer be your disciple and won’t see your private posts. They won’t be notified.', confirm: 'Remove', danger: true, icon: 'fa-user-minus' }
+          : { title: `Unfollow @${u.username}?`, message: 'You will stop seeing their private posts and stories.', confirm: 'Unfollow', icon: 'fa-user-minus' });
+        if (!ok) return;
+        try { mineF ? await api('/disciples/' + u.id, { method: 'DELETE' }) : await api(`/users/${u.id}/disciple`, { method: 'POST' }); peopleModal(kind); }
+        catch (e) { toast(e.message); }
+      });
+    } catch (e) { $('#pl').innerHTML = `<p class="mute">${esc(e.message)}</p>`; }
+  }
+  async function requestsModal() {
+    modal(`<h2>Disciple requests</h2><div id="pl"><p class="mute">Loading…</p></div><button class="btn ghost" style="width:100%;margin-top:12px" onclick="closeModal()">Close</button>`);
+    try {
+      const l = await api('/disciples/requests');
+      $('#pl').innerHTML = l.map(u => `<div class="row plr">${avatar(u, 'sm')}${name(u)}<span class="sp row"><button class="btn sm ac" data-id="${u.id}">Accept</button><button class="btn ghost sm dc" data-id="${u.id}">Decline</button></span></div>`).join('') || '<p class="mute">No pending requests.</p>';
+      const act = (sel, path) => document.querySelectorAll(sel).forEach(b => b.onclick = async () => {
+        try { await api(`/disciples/requests/${b.dataset.id}/${path}`, { method: 'POST' }); requestsModal(); } catch (e) { toast(e.message); }
+      });
+      act('#pl .ac', 'accept'); act('#pl .dc', 'decline');
+    } catch (e) { $('#pl').innerHTML = `<p class="mute">${esc(e.message)}</p>`; }
   }
   BC.toggleBlock = (u, isBlocked, after) => toggleBlock(u, isBlocked, after);
   async function toggleBlock(u, isBlocked, after) {
@@ -180,7 +218,7 @@
       ${sw('pEdu', 'Show course & year', 'Display your education on your profile', me.showEducation)}
       ${sw('pLs', 'Show last seen', 'Let others see when you were last active', me.showLastSeen)}
       ${sw('pOn', 'Show online status', 'Show the green online dot', me.showOnlineStatus)}
-      ${sw('pLock', 'Lock my posts', 'Only you can see your posts. Turn off to make them public', me.lockPosts)}</div>`;
+      ${sw('pLock', 'Private account', 'Only your disciples can see your posts and stories. New disciples need your approval', me.lockPosts)}</div>`;
     if (sec === 'appearance') body = `<div class="card"><h2>Appearance</h2><div class="set-row"><div><b>Theme</b><span class="mute">Match your device or pick one</span></div>
       <select id="sth" style="width:auto"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div>`;
     if (sec === 'blocked') body = `<div class="card"><h2>Blocked accounts</h2><div id="bl2"><p class="mute">Loading…</p></div></div>`;
