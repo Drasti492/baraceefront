@@ -1,7 +1,7 @@
 /* bc-people.js — profiles, disciples, ratings, block, edit profile, settings, privacy, support. */
 (() => {
   // Create a free form at formspree.io and paste its URL here (looks like https://formspree.io/f/abcdwxyz)
-  const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID';
+  const FORMSPREE_URL = 'https://formspree.io/f/mljbrnpn';
   const YEARS = ['1st year', '2nd year', '3rd year', '4th year', 'Super senior', 'Alumni'];
   const dispName = u => u.bizName && u.type === 'business' ? u.bizName : (u.displayName || u.username);
 
